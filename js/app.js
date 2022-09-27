@@ -33,28 +33,27 @@ function Product(name, fileExtension = 'jpg') {
 }
 
 
-
 // ****** HELPER FUNCTION / UTILITIES ******
 
 function randomIndex() {
   return Math.floor(Math.random() * productArray.length);
 }
 
+let indexArray = [];
+
 
 function renderImgs() {
-  let imgOneIndex = randomIndex();
-  let imgTwoIndex = randomIndex();
-  let imgThreeIndex = randomIndex();
 
-
-  // this will run and make sure they are unique
-  // ? multiple conditions to check for with 3 images
-  // ? OR use a container to store your 3 indexes and do your validation on that
-
-  while (imgOneIndex === imgTwoIndex || imgOneIndex === imgThreeIndex || imgTwoIndex === imgThreeIndex) {
-    imgTwoIndex = randomIndex();
-    imgThreeIndex = randomIndex();
+  while (indexArray.length < 6) {
+    let randomNum = randomIndex();
+    if (!indexArray.includes(randomNum)) {
+      indexArray.push(randomNum);
+    }
   }
+
+  let imgOneIndex = indexArray.shift();
+  let imgTwoIndex = indexArray.shift();
+  let imgThreeIndex = indexArray.shift();
 
   imgOne.src = productArray[imgOneIndex].img;
   imgTwo.src = productArray[imgTwoIndex].img;
@@ -69,48 +68,79 @@ function renderImgs() {
   imgThree.alt = productArray[imgThreeIndex].name;
 }
 
+function renderChart() {
+  let prodNames = [];
+  let prodVotes = [];
+  let prodViews = [];
+
+  for (let i = 0; i < productArray.length; i++) {
+    prodNames.push(productArray[i].name);
+    prodVotes.push(productArray[i].clicks);
+    prodViews.push(productArray[i].views);
+  }
+
+  const ctx = document.getElementById('myChart').getContext('2d');
+  const myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: prodNames,
+      datasets: [{
+        data: prodVotes,
+        label: '# of Votes',
+        backgroundColor: [
+          'green',
+          'brown',
+          'white',
+          'burlywood',
+          'black',
+        ],
+        borderColor: [
+          'black',
+        ],
+        borderWidth: 2
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
 
 // ***** EVENT HANDLERS **********
 
+// TODO: after voting rounds have ended... end the clicks!
 function handleClick(event) {
   console.dir(event.target);
   let imgClicked = event.target.alt;
-
-  // TODO: Add clicks to the image that was clicked
   console.log('img clicked >>', imgClicked);
-
   for (let i = 0; i < productArray.length; i++) {
     if (productArray[i].name === imgClicked) {
-      // increase vote counts
       productArray[i].clicks++;
     }
   }
-
-  // TODO: decrement the vote count
   voteCount--;
-
-  // TODO: call the render img to reload new images
   renderImgs();
-
-  // TODO: after voting rounds have ended... end the clicks!
   if (voteCount === 0) {
     imgContainer.removeEventListener('click', handleClick);
+    renderChart();
   }
 }
 
+// TODO: Display results - once there are no more votes left
 function handleShowResults() {
-  // TODO: Display results - once there are no more votes left
   if (voteCount === 0) {
     for (let i = 0; i < productArray.length; i++) {
       let liElem = document.createElement('li');
-      liElem.textContent = `${productArray[i].name} was clicked ${productArray[i].clicks} times, and was seen ${productArray[i].views} times.`;
+      liElem.textContent = `${productArray[i].name} received ${productArray[i].clicks} votes, and was seen ${productArray[i].views} times.`;
       resultsContainer.appendChild(liElem);
-
-      resultsBtn.removeEventListener('click', handleShowResults);
     }
+    resultsBtn.removeEventListener('click', handleShowResults);
   }
 }
-
 
 
 // ****** EXECUTABLE CODE ********
@@ -134,6 +164,7 @@ new Product('tauntaun');
 new Product('unicorn');
 new Product('water-can');
 new Product('wine-glass');
+console.log(productArray);
 
 renderImgs();
 
