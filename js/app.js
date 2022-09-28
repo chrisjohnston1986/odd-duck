@@ -134,6 +134,13 @@ function handleClick(event) {
   if (voteCount === 0) {
     imgContainer.removeEventListener('click', handleClick);
     renderChart();
+
+    //  LOCAL STORAGE STARTS HERE
+    // Step1: Stringify the data
+    let prodString = JSON.stringify(productArray);
+    //   console.log(productArray);
+    // Step2: Add to local storage
+    localStorage.setItem('myImgs', prodString);
   }
 }
 
@@ -149,29 +156,63 @@ function handleShowResults() {
   }
 }
 
+//  ***** MORE LOCAL STORAGE CODE *****
+// Step3: Pull data out of local storage
+let retrievedProds = localStorage.getItem('myImgs');
+console.log('retrievedImgs >>> ', retrievedProds);
+
+// Step4: Parse my data into code my app can use
+let parsedProds = JSON.parse(retrievedProds);
+
+console.log('parsed images >>>', parsedProds);
 
 // ****** EXECUTABLE CODE ********
 
-new Product('bag');
-new Product('banana');
-new Product('bathroom');
-new Product('boots');
-new Product('breakfast');
-new Product('bubblegum');
-new Product('chair');
-new Product('cthulhu');
-new Product('dog-duck');
-new Product('dragon');
-new Product('pen');
-new Product('pet-sweep');
-new Product('scissors');
-new Product('shark');
-new Product('sweep', 'png');
-new Product('tauntaun');
-new Product('unicorn');
-new Product('water-can');
-new Product('wine-glass');
-console.log(productArray);
+if (retrievedProds) {
+  productArray = parsedProds;
+} else {
+  new Product('bag');
+  new Product('banana');
+  new Product('bathroom');
+  new Product('boots');
+  new Product('breakfast');
+  new Product('bubblegum');
+  new Product('chair');
+  new Product('cthulhu');
+  new Product('dog-duck');
+  new Product('dragon');
+  new Product('pen');
+  new Product('pet-sweep');
+  new Product('scissors');
+  new Product('shark');
+  new Product('sweep', 'png');
+  new Product('tauntaun');
+  new Product('unicorn');
+  new Product('water-can');
+  new Product('wine-glass');
+}
+
+// new Product('bag');
+// new Product('banana');
+// new Product('bathroom');
+// new Product('boots');
+// new Product('breakfast');
+// new Product('bubblegum');
+// new Product('chair');
+// new Product('cthulhu');
+// new Product('dog-duck');
+// new Product('dragon');
+// new Product('pen');
+// new Product('pet-sweep');
+// new Product('scissors');
+// new Product('shark');
+// new Product('sweep', 'png');
+// new Product('tauntaun');
+// new Product('unicorn');
+// new Product('water-can');
+// new Product('wine-glass');
+
+
 
 renderImgs();
 
