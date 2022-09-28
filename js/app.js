@@ -88,11 +88,18 @@ function renderChart() {
         data: prodVotes,
         label: '# of Votes',
         backgroundColor: [
-          'green',
-          'brown',
-          'white',
           'burlywood',
+        ],
+        borderColor: [
           'black',
+        ],
+        borderWidth: 2
+      },
+      {
+        data: prodViews,
+        label: '# of Views',
+        backgroundColor: [
+          'green',
         ],
         borderColor: [
           'black',
